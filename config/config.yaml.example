@@ -1,0 +1,51 @@
+# YouTube Downloader Automation Configuration
+# This file contains default settings for the application
+# Copy this to config.yaml and customize as needed
+
+# Download settings
+downloads_dir: "downloads"  # Directory to save downloaded videos
+video_quality: "best[height<=720]"  # Video quality preference (720p max)
+audio_quality: "best"  # Audio quality preference
+output_format: "mp4"  # Preferred output format
+max_duration: 1800  # Maximum video duration in seconds (30 minutes)
+concurrent_downloads: 3  # Number of concurrent downloads
+
+# Application settings
+log_level: "INFO"  # Logging level (DEBUG, INFO, WARNING, ERROR)
+
+# yt-dlp specific options
+yt_dlp_options:
+  writesubtitles: false  # Download subtitle files
+  writeautomaticsub: false  # Download auto-generated subtitles
+  ignoreerrors: true  # Continue on download errors
+  no_warnings: false  # Show warnings
+  extractaudio: false  # Extract audio only
+  audioformat: "mp3"  # Audio format when extracting audio
+
+# Search settings
+search_max_results: 50  # Maximum search results to consider
+filter_by_duration: true  # Filter videos by max_duration
+filter_by_views: false  # Filter by minimum view count
+min_views: 1000  # Minimum view count (if filter_by_views is true)
+
+# Advanced settings
+use_archive: true  # Keep track of downloaded videos to avoid duplicates
+archive_file: "download_archive.txt"  # Archive file name
+skip_downloaded_by_default: true  # Skip already downloaded videos by default
+retries: 3  # Number of retry attempts for failed downloads
+socket_timeout: 30  # Network timeout in seconds
+
+# AI Integration Settings (Optional - Recommended for better results)
+# Get free API key: https://makersuite.google.com/app/apikey
+ai_enabled: false  # Enable AI-powered search enhancement and filtering
+ai_provider: "gemini"  # AI provider: "gemini" or "chatgpt" (gemini recommended - free tier)
+gemini_api_key: ""  # Your Gemini API key - DO NOT commit actual keys! Use .env file instead
+openai_api_key: ""  # Your OpenAI API key (if using ChatGPT) - Use .env file instead
+ai_search_enhancement: true  # Use AI to generate better search queries
+ai_result_filtering: true  # Use AI to filter and rank search results
+ai_max_results_to_analyze: 30  # Maximum number of results for AI to analyze
+
+# NOTE: For security, API keys should be set via environment variables:
+# - Set GEMINI_API_KEY in your .env file
+# - Set OPENAI_API_KEY in your .env file
+# The application will automatically use environment variables over config file values

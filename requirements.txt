@@ -1,0 +1,43 @@
+# YouTube Downloader Automation - Python Dependencies
+
+# Core YouTube downloading library (modern replacement for youtube-dl)
+yt-dlp>=2023.12.30
+
+# YouTube search functionality - using yt-dlp only (more reliable)
+# pytubefix>=6.16.0  # Not needed, yt-dlp handles everything
+
+# HTTP requests for API calls (updated for security patches)
+requests>=2.32.4
+
+# Rich terminal output and progress bars
+rich>=13.7.0
+
+# Configuration file handling
+pyyaml>=6.0.1
+
+# Logging and utilities
+colorlog>=6.8.0
+
+# CLI argument parsing (built into Python, but specifying for clarity)
+argparse
+
+# JSON handling (built into Python)
+json5>=0.9.14
+
+# File system operations
+pathlib2>=2.3.7
+
+# Date and time utilities
+python-dateutil>=2.8.2
+
+# Video processing (if needed for format conversion)
+moviepy>=1.0.3
+
+# Progress bar for downloads
+tqdm>=4.66.1
+
+# Safe file operations
+send2trash>=1.8.2
+
+# AI Integration for intelligent video search and filtering
+google-generativeai>=0.3.0
