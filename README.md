@@ -149,5 +149,3 @@ Projek ini bawah MIT License — lihat `LICENSE`.
 # Tunjuk log AI terkini
 ./show_latest_ai_log.sh
 ```
-
-Kalau nak saya buat versi lebih formal atau ringkasan untuk README, beritahu je. Selamat muat turun! 🎬
