@@ -126,7 +126,7 @@ def _call_ai_with_logging(self, prompt: str, operation_type: str):
 # AI Integration Settings
 ai_enabled: true                              # ✅ AI is ENABLED
 ai_provider: "gemini"                         # ✅ Using GEMINI
-gemini_api_key: "AIzaSyDiOR0XcG8HuvSmUhW8PozAxegqj-MGRBY"  # ✅ API Key present
+gemini_api_key: "AIzaSyDiOR0..............."  # ✅ API Key present
 ai_search_enhancement: true                   # ✅ Search enhancement ON
 ai_result_filtering: true                     # ✅ Result filtering ON
 ai_max_results_to_analyze: 30                 # Analyzes up to 30 videos
