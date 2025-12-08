@@ -182,6 +182,60 @@ def format_size(bytes_size: int) -> str:
         bytes_size /= 1024.0
     return f"{bytes_size:.1f} PB"
 
+def format_file_size(size_bytes: int) -> str:
+    """
+    Format file size in bytes to human-readable format (alias for format_size).
+    
+    Args:
+        size_bytes (int): File size in bytes
+        
+    Returns:
+        str: Formatted file size (e.g., "1.5 MB")
+    """
+    return format_size(size_bytes)
+
+def get_video_thumbnail(video_url: str) -> Optional[str]:
+    """
+    Extract YouTube video thumbnail URL from video URL.
+    
+    Args:
+        video_url (str): YouTube video URL
+        
+    Returns:
+        Optional[str]: Thumbnail URL or None
+    """
+    # Extract video ID from URL
+    video_id = extract_video_id(video_url)
+    
+    if video_id:
+        return f"https://img.youtube.com/vi/{video_id}/maxresdefault.jpg"
+    
+    return None
+
+def extract_video_id(video_url: str) -> Optional[str]:
+    """
+    Extract video ID from YouTube URL.
+    
+    Args:
+        video_url (str): YouTube video URL
+        
+    Returns:
+        Optional[str]: Video ID or None
+    """
+    # Handle various YouTube URL formats
+    patterns = [
+        r'(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\n?]*)',
+        r'youtube\.com\/embed\/([^&\n?]*)',
+        r'youtube\.com\/v\/([^&\n?]*)',
+    ]
+    
+    for pattern in patterns:
+        match = re.search(pattern, video_url)
+        if match:
+            return match.group(1)
+    
+    return None
+
 def validate_search_query(query: str) -> Tuple[bool, str]:
     """
     Validate search query input.

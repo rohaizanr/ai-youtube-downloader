@@ -229,6 +229,13 @@ class YouTubeDownloader:
                         continue
                     
                     # Safely extract video information
+                    thumbnail = self._safe_get_thumbnail(video)
+                    if not thumbnail:
+                        # Extract video ID and use YouTube's thumbnail URL
+                        video_id = video_url.split('v=')[-1].split('&')[0] if 'v=' in video_url else ''
+                        if video_id:
+                            thumbnail = f'https://img.youtube.com/vi/{video_id}/maxresdefault.jpg'
+                    
                     video_info = {
                         'title': video.get('title', 'Unknown Title'),
                         'url': video_url,
@@ -236,7 +243,7 @@ class YouTubeDownloader:
                         'duration_seconds': duration_seconds,
                         'views': self._safe_get_views(video),
                         'channel': self._safe_get_channel(video),
-                        'thumbnail': self._safe_get_thumbnail(video),
+                        'thumbnail': thumbnail,
                         'published': video.get('publishedTime', 'Unknown')
                     }
                     
@@ -327,12 +334,31 @@ class YouTubeDownloader:
                         else:
                             view_count_str = str(view_count)
                         
-                        video_url = f"https://www.youtube.com/watch?v={entry.get('id', '')}"
+                        video_id = entry.get('id', '')
+                        video_url = f"https://www.youtube.com/watch?v={video_id}"
                         
                         # Skip duplicate URLs in the same search result
                         if video_url in seen_urls:
                             self.logger.debug(f"Skipping duplicate URL in search results: {video_url}")
                             continue
+                        
+                        # Get thumbnail URL with multiple fallbacks
+                        thumbnail_url = entry.get('thumbnail', '')
+                        
+                        # Try thumbnails array if main thumbnail is empty
+                        if not thumbnail_url:
+                            thumbnails = entry.get('thumbnails', [])
+                            if thumbnails and isinstance(thumbnails, list) and len(thumbnails) > 0:
+                                # Get the highest quality thumbnail (usually last in list)
+                                thumbnail_url = thumbnails[-1].get('url', '')
+                        
+                        # Final fallback to YouTube's default thumbnail format
+                        if not thumbnail_url and video_id:
+                            thumbnail_url = f'https://img.youtube.com/vi/{video_id}/maxresdefault.jpg'
+                        
+                        # If still no thumbnail, use standard quality fallback
+                        if not thumbnail_url and video_id:
+                            thumbnail_url = f'https://img.youtube.com/vi/{video_id}/hqdefault.jpg'
                         
                         video_info = {
                             'title': entry.get('title', 'Unknown Title'),
@@ -341,7 +367,7 @@ class YouTubeDownloader:
                             'duration_seconds': duration_seconds,
                             'views': view_count_str,
                             'channel': entry.get('uploader', 'Unknown Channel'),
-                            'thumbnail': entry.get('thumbnail', ''),
+                            'thumbnail': thumbnail_url,
                             'published': entry.get('upload_date', 'Unknown')
                         }
                         
@@ -384,13 +410,31 @@ class YouTubeDownloader:
             return 'Unknown Channel'
     
     def _safe_get_thumbnail(self, video: dict) -> str:
-        """Safely extract thumbnail URL from video data."""
+        """Safely extract thumbnail URL from video data with fallbacks."""
         try:
+            # Try to get from thumbnails array (highest quality, usually last)
             thumbnails = video.get('thumbnails', [])
-            if thumbnails and len(thumbnails) > 0:
-                return thumbnails[0].get('url', '')
+            if thumbnails and isinstance(thumbnails, list) and len(thumbnails) > 0:
+                # Get highest quality (last in array)
+                thumbnail_url = thumbnails[-1].get('url', '')
+                if thumbnail_url:
+                    return thumbnail_url
+            
+            # Try direct thumbnail field
+            thumbnail = video.get('thumbnail', '')
+            if thumbnail:
+                return thumbnail
+            
+            # Fallback: Extract video ID and construct YouTube thumbnail URL
+            video_url = video.get('link', '')
+            if video_url and 'v=' in video_url:
+                video_id = video_url.split('v=')[-1].split('&')[0]
+                if video_id:
+                    return f'https://img.youtube.com/vi/{video_id}/maxresdefault.jpg'
+            
             return ''
-        except:
+        except Exception as e:
+            self.logger.debug(f"Error extracting thumbnail: {e}")
             return ''
     
     def _format_duration_from_seconds(self, seconds: int) -> str:
